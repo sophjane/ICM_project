@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="bottom"
-    android:layout_margin="40dp">
+    android:layout_margin="40dp"
+    android:id="@+id/layout">
 
     <TextView
         android:id="@+id/message"

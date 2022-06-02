@@ -1,9 +1,13 @@
 package ua.icm.medassistant;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.Calendar;
@@ -11,6 +15,13 @@ import java.util.Calendar;
 public class MainActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
+    private static final int TEXT_REQUEST = 1;
+
+    protected boolean handleLongClick() {
+        Intent intent = new Intent(this, HomeActivity.class);
+        startActivityForResult(intent, TEXT_REQUEST);
+        return true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,14 +29,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int height = displayMetrics.heightPixels;
-        int width = displayMetrics.widthPixels;
+        LinearLayout layout = (LinearLayout) findViewById(R.id.layout);
+        layout.setOnLongClickListener(new View.OnLongClickListener() {
 
+            @Override
+            public boolean onLongClick(View v) {
+               return handleLongClick();
+            }
 
-        System.out.println(height);
-        System.out.println(width);
+        });
 
         Calendar calendar = Calendar.getInstance();
 
@@ -109,11 +121,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         String time = hour + ":" + minute;
-        Log.d(LOG_TAG, time);
 
         String fullDay = String.format("%s, %s %d %d", dayOfTheWeek, monthName, dayOfTheMonth, year);
-        Log.d(LOG_TAG, fullDay);
-
 
         TextView timeTextView = findViewById(R.id.time);
         timeTextView.setText(time);
