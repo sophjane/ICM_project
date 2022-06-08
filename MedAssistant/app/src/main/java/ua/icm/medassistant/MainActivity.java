@@ -17,10 +17,9 @@ public class MainActivity extends AppCompatActivity {
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private static final int TEXT_REQUEST = 1;
 
-    protected boolean handleLongClick() {
+    protected void handleClick() {
         Intent intent = new Intent(this, HomeActivity.class);
         startActivityForResult(intent, TEXT_REQUEST);
-        return true;
     }
 
     @Override
@@ -30,11 +29,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         LinearLayout layout = (LinearLayout) findViewById(R.id.layout);
-        layout.setOnLongClickListener(new View.OnLongClickListener() {
+        layout.setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public boolean onLongClick(View v) {
-               return handleLongClick();
+            public void onClick(View v) {
+               handleClick();
             }
 
         });
