@@ -1,6 +1,7 @@
 package ua.icm.medassistant;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
@@ -13,12 +14,14 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.Arrays;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private static final int TEXT_REQUEST = 1;
+    private static int CAMERA_REQUEST_CODE = 101;
 
     protected void handleClick() {
         Intent intent = new Intent(this, HomeActivity.class);
@@ -133,6 +136,8 @@ public class MainActivity extends AppCompatActivity {
 
         TextView dayTextView = findViewById(R.id.day);
         dayTextView.setText(fullDay);
+
+        setupPermissions();
     }
     private void setupPermissions(){
         int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
@@ -142,6 +147,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     private void makeRequest(){
-
+        ActivityCompat.requestPermissions(this, (String[]) Arrays.asList(android.Manifest.permission.CAMERA).toArray(), CAMERA_REQUEST_CODE);
     }
 }
