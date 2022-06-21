@@ -30,7 +30,7 @@ public class CheckMedicationsActivity extends AppCompatActivity {
 
     private boolean mTwoPane = false;
     private RecyclerView recyclerView;
-    private static int TIME_OUT =  10000;
+    private static int TIME_OUT =  50000;
     Timer timer;
 
     @Override
@@ -61,7 +61,7 @@ public class CheckMedicationsActivity extends AppCompatActivity {
             }
         });
 
-        timer = new Timer();
+       /* timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -69,7 +69,7 @@ public class CheckMedicationsActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
-        }, TIME_OUT);
+        }, TIME_OUT);*/
     }
 
     /*Method to generate List of data using RecyclerView with custom adapter*/

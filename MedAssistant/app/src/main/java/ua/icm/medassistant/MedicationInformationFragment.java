@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import retrofit2.Call;
@@ -20,8 +21,10 @@ import ua.icm.medassistant.network.RetrofitInstance;
 
 public class MedicationInformationFragment extends Fragment {
 
+    Button button;
     int globalIdLocal;
     IpmaApiEndpoints service = RetrofitInstance.getRetrofitInstance().create(IpmaApiEndpoints.class);
+    private static final String LOG_TAG = MedicationInformationFragment.class.getSimpleName();
 
     public MedicationInformationFragment() {}
 
@@ -44,9 +47,6 @@ public class MedicationInformationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_medication_info, container, false);
-       /* if (mCity != null) {
-            ((TextView) rootView.findViewById(R.id.city_weather)).setText(mCity.weather);
-        }*/
         Call<WeatherGroup> call = service.getWeatherParent(globalIdLocal);
 
         call.enqueue(new Callback<WeatherGroup>() {
@@ -63,6 +63,7 @@ public class MedicationInformationFragment extends Fragment {
         });
         return rootView;
     }
+
 
 
     private void generateWeatherInfo(View rootView, WeatherGroup weatherGroup) {

@@ -74,7 +74,7 @@ public class AddMedicationActivity extends AppCompatActivity {
                                         }
         );
 
-        timer = new Timer();
+      /*  timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -82,7 +82,7 @@ public class AddMedicationActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
-        }, TIME_OUT);
+        }, TIME_OUT);*/
 
     }
 

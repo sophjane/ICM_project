@@ -15,7 +15,7 @@ import java.util.TimerTask;
 public class HomeActivity extends AppCompatActivity {
 
     private static final int TEXT_REQUEST = 1;
-    private static int TIME_OUT =  10000;
+    private static int TIME_OUT =  50000;
     Timer timer;
 
     @Override
@@ -37,7 +37,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        timer = new Timer();
+      /*  timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -45,7 +45,7 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
-        }, TIME_OUT);
+        }, TIME_OUT);*/
     }
 
     private void handleAddMedClick() {
