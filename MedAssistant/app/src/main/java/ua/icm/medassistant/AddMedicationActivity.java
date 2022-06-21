@@ -148,6 +148,9 @@ public class AddMedicationActivity extends AppCompatActivity {
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             selectedImage.setImageBitmap(imageBitmap);
         }
+        if (resultCode==RESULT_OK && data!=null) {
+            retrieveBarcode(data);
+        }
 
     }
 
@@ -180,5 +183,12 @@ public class AddMedicationActivity extends AppCompatActivity {
     public void openDatePicker(Button datePicker) {
         initDatePicker(datePicker);
         datePickerDialog.show();
+    }
+
+
+
+    private void retrieveBarcode(Intent data){
+        String barcode = data.getStringExtra("barcode");
+        gotoScanner.setText(barcode);
     }
 }

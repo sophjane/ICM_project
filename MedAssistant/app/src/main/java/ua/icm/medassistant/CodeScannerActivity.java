@@ -55,7 +55,7 @@ public class CodeScannerActivity extends AppCompatActivity {
 
     private void codeScanner(CodeScannerView scannerView){
         mCodeScanner = new CodeScanner(this, scannerView);
-        mCodeScanner.setCamera(CodeScanner.CAMERA_FRONT);
+        mCodeScanner.setCamera(CodeScanner.CAMERA_BACK);
         mCodeScanner.setDecodeCallback(new DecodeCallback() {
             @Override
             public void onDecoded(@NonNull final Result result) {
