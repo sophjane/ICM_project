@@ -1,123 +1,142 @@
 package ua.icm.medassistant;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.Manifest;
-import android.app.AlertDialog;
-import android.app.DatePickerDialog;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.LinkedList;
-import java.util.TimeZone;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import ua.icm.medassistant.datamodel.City;
+import ua.icm.medassistant.datamodel.CityGroup;
+import ua.icm.medassistant.network.IpmaApiEndpoints;
+import ua.icm.medassistant.network.RetrofitInstance;
 
 public class CheckMedicationsActivity extends AppCompatActivity {
 
-    private final LinkedList<String> medications = new LinkedList<>();
-
+    private boolean mTwoPane = false;
     private RecyclerView recyclerView;
-    private MedicationsAdapter adapter;
-    private boolean twoPane = false;
+    private static int TIME_OUT =  10000;
+    Timer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_check_medications);
-        for (int i = 0; i < 20; i++) {
-            medications.addLast("Med " + i);
-        }
+        setContentView(R.layout.activity_medication_list);
 
-        recyclerView = findViewById(R.id.recyclerview);
-        adapter = new MedicationsAdapter(this, medications);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitle(getTitle());
+        toolbar.setTitleTextColor(Color.WHITE);
 
-        if(findViewById(R.id.medication_info_container) != null) {
-            twoPane = true;
+        //Create handle for the RetrofitInstance interface
+        IpmaApiEndpoints service = RetrofitInstance.getRetrofitInstance().create(IpmaApiEndpoints.class);
+
+        Call<CityGroup> call = service.getCityParent();
+
+        call.enqueue(new Callback<CityGroup>() {
+
+            @Override
+            public void onResponse(Call<CityGroup> call, Response<CityGroup> response) {
+                generateDataList(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<CityGroup> call, Throwable t) {
+                Toast.makeText(CheckMedicationsActivity.this, "Something went wrong...Please try later!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(CheckMedicationsActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        }, TIME_OUT);
+    }
+
+    /*Method to generate List of data using RecyclerView with custom adapter*/
+    private void generateDataList(CityGroup cityGroup) {
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.medication_list);
+        recyclerView.setAdapter(new CityListViewAdapter(cityGroup.getCities()));
+        // The city_weather_container only shows up when the screen's width is 600dp or larger
+        if (findViewById(R.id.medication_info_container) != null) {
+            mTwoPane = true;
         }
     }
 
-    public class MedicationsAdapter extends
-            RecyclerView.Adapter<MedicationsAdapter.MedicationViewHolder> {
+    class CityListViewAdapter extends RecyclerView.Adapter<CityListViewAdapter.ViewHolder> {
 
-        private final LinkedList<String> medications;
-        private LayoutInflater mInflater;
+        private final List<City> mValues;
 
-        public MedicationsAdapter(Context context, LinkedList<String> medications) {
-            mInflater = LayoutInflater.from(context);
-            this.medications = medications;
-        }
-
-
-        @NonNull
-        @Override
-        public MedicationsAdapter.MedicationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View itemView = mInflater.inflate(R.layout.medications_item, parent, false);
-            return new MedicationViewHolder(itemView, this);
+        CityListViewAdapter(List<City> items) {
+            mValues = items;
         }
 
         @Override
-        public void onBindViewHolder(@NonNull MedicationsAdapter.MedicationViewHolder holder, int position) {
-            String current = medications.get(position);
-            holder.medicationItemView.setText(current);
-            holder.medicationItemView.setOnClickListener(new View.OnClickListener() {
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.medication_list_item, parent, false);
+            return new ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(final ViewHolder holder, int position) {
+            holder.mItem = mValues.get(position);
+            holder.mContentView.setText(mValues.get(position).getLocal());
+            holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
-                    if (twoPane) {
-                       // int selectedSong = holder.getAdapterPosition();
-                        MedicationInformationFragment fragment = MedicationInformationFragment.newInstance();
+                public void onClick(View v) {
+                    if (mTwoPane) {
+                        int selectedCity = holder.mItem.getGlobalIdLocal();
+                        MedicationInformationFragment fragment = MedicationInformationFragment.newInstance(selectedCity);
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.medication_info_container, fragment)
                                 .addToBackStack(null)
                                 .commit();
                     } else {
-                        Context context = view.getContext();
+                        Context context = v.getContext();
                         Intent intent = new Intent(context, MedicationInformationActivity.class);
+                        intent.putExtra("cityGlobalLocal", holder.mItem.getGlobalIdLocal());
                         context.startActivity(intent);
                     }
-
                 }
-                                                         }
-
-            );
+            });
         }
 
         @Override
         public int getItemCount() {
-            return medications.size();
+            return mValues.size();
         }
 
-        class MedicationViewHolder extends RecyclerView.ViewHolder {
+        class ViewHolder extends RecyclerView.ViewHolder {
+            final View mView;
+            final TextView mContentView;
+            City mItem;
 
-            public final TextView medicationItemView;
-            final MedicationsAdapter medicationsAdapter;
-            public MedicationViewHolder(@NonNull View itemView, MedicationsAdapter medicationsAdapter) {
-                super(itemView);
-                medicationItemView = itemView.findViewById(R.id.medication);
-                this.medicationsAdapter = medicationsAdapter;
+            ViewHolder(View view) {
+                super(view);
+                mView = view;
+                mContentView = (TextView) view.findViewById(R.id.content);
             }
-
-
         }
     }
+
+
 }

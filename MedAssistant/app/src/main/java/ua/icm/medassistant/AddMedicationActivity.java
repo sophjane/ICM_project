@@ -17,6 +17,8 @@ import android.widget.ImageView;
 
 import java.util.Calendar;
 import java.util.TimeZone;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class AddMedicationActivity extends AppCompatActivity {
 
@@ -34,6 +36,8 @@ public class AddMedicationActivity extends AppCompatActivity {
 
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static int TIME_OUT =  10000;
+    Timer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +73,16 @@ public class AddMedicationActivity extends AppCompatActivity {
                                             }
                                         }
         );
+
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(AddMedicationActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        }, TIME_OUT);
 
     }
 
