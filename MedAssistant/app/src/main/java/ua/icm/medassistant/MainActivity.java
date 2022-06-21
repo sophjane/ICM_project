@@ -1,8 +1,11 @@
 package ua.icm.medassistant;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -130,5 +133,15 @@ public class MainActivity extends AppCompatActivity {
 
         TextView dayTextView = findViewById(R.id.day);
         dayTextView.setText(fullDay);
+    }
+    private void setupPermissions(){
+        int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+
+        if (permission!= PackageManager.PERMISSION_GRANTED){
+            makeRequest();
+        }
+    }
+    private void makeRequest(){
+
     }
 }

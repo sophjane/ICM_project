@@ -1,5 +1,6 @@
 package ua.icm.medassistant;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
@@ -7,6 +8,8 @@ import android.app.DatePickerDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
@@ -20,16 +23,17 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.TimeZone;
 
-import com.google.android.gms.tasks.OnFailureListener;
+/*import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.mlkit.vision.barcode.BarcodeScanner;
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions;
 import com.google.mlkit.vision.barcode.BarcodeScanning;
 import com.google.mlkit.vision.barcode.common.Barcode;
-import com.google.mlkit.vision.common.InputImage;
+import com.google.mlkit.vision.common.InputImage;*/
 
 public class AddMedicationActivity extends AppCompatActivity {
 
@@ -47,8 +51,11 @@ public class AddMedicationActivity extends AppCompatActivity {
     Switch notifications;
     boolean notificationsOn;
 
+    Button gotoScanner;
+
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int TEXT_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +74,7 @@ public class AddMedicationActivity extends AppCompatActivity {
         startDateBtn = findViewById(R.id.startDate);
         endDateBtn = findViewById(R.id.endDate);
         notifications = findViewById(R.id.notificationSwitch);
+        gotoScanner = findViewById(R.id.scanner);
 
         notifications.setTextOn("On");
         notifications.setTextOff("Off");
@@ -116,14 +124,17 @@ public class AddMedicationActivity extends AppCompatActivity {
             }
         });
 
+        gotoScanner.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                handleGoToScanner();
+            }
+        });
+
     }
 
-    private void scanBarcodes(InputImage image){
-        BarcodeScannerOptions options =
-                new BarcodeScannerOptions.Builder()
-                        .setBarcodeFormats(
-                                Barcode.FORMAT_ALL_FORMATS)
-                        .build();
+    private void handleGoToScanner() {
+        Intent intent = new Intent(this, CodeScannerActivity.class);
+        startActivityForResult(intent, TEXT_REQUEST);
     }
 
     @Override
