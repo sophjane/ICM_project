@@ -11,12 +11,25 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Switch;
+import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.TimeZone;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.mlkit.vision.barcode.BarcodeScanner;
+import com.google.mlkit.vision.barcode.BarcodeScannerOptions;
+import com.google.mlkit.vision.barcode.BarcodeScanning;
+import com.google.mlkit.vision.barcode.common.Barcode;
+import com.google.mlkit.vision.common.InputImage;
 
 public class AddMedicationActivity extends AppCompatActivity {
 
@@ -25,12 +38,14 @@ public class AddMedicationActivity extends AppCompatActivity {
     EditText nameInput;
 
     DatePickerDialog datePickerDialog;
-    Button startDateBtn;
+    Button startDateBtn, endDateBtn;
 
     Calendar calendar;
     int currentYear;
     int currentMonth;
     int currentDay;
+    Switch notifications;
+    boolean notificationsOn;
 
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -50,6 +65,12 @@ public class AddMedicationActivity extends AppCompatActivity {
         addPhotoBtn = findViewById(R.id.addPhoto);
         nameInput = findViewById(R.id.nameInput);
         startDateBtn = findViewById(R.id.startDate);
+        endDateBtn = findViewById(R.id.endDate);
+        notifications = findViewById(R.id.notificationSwitch);
+
+        notifications.setTextOn("On");
+        notifications.setTextOff("Off");
+        notifications.setChecked(true);
 
         addPhotoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,18 +79,51 @@ public class AddMedicationActivity extends AppCompatActivity {
             }
         });
 
-        nameInput.setVisibility(View.VISIBLE);
         startDateBtn.setVisibility(View.VISIBLE);
-        startDateBtn.setText("Set Start Date");
+        //startDateBtn.setText("Set Start Date");
         startDateBtn.setTextSize(15);
         startDateBtn.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
-                                                openDatePicker();
+                                                openDatePicker(startDateBtn);
+                                            }
+                                        });
+
+        nameInput.setVisibility(View.VISIBLE);
+        endDateBtn.setVisibility(View.VISIBLE);
+        //endDateBtn.setText("Set End Date");
+        endDateBtn.setTextSize(15);
+        endDateBtn.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                openDatePicker(endDateBtn);
                                             }
                                         }
         );
 
+        notifications.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                String input;
+                if (isChecked){
+                    input = notifications.getTextOn().toString();
+                }else{
+                    input = notifications.getTextOff().toString();
+
+                }
+                notificationsOn = isChecked;
+                Toast.makeText(getApplicationContext(), "Notifications are "+input,Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    private void scanBarcodes(InputImage image){
+        BarcodeScannerOptions options =
+                new BarcodeScannerOptions.Builder()
+                        .setBarcodeFormats(
+                                Barcode.FORMAT_ALL_FORMATS)
+                        .build();
     }
 
     @Override
@@ -96,13 +150,13 @@ public class AddMedicationActivity extends AppCompatActivity {
         }
     }
 
-    private void initDatePicker() {
+    private void initDatePicker(Button datePickerBtn) {
         DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 month = month+1;
                 String date = String.format("%d / %d / %d", day, month, year);
-                startDateBtn.setText(date);
+                datePickerBtn.setText(date);
             }
         };
 
@@ -112,8 +166,8 @@ public class AddMedicationActivity extends AppCompatActivity {
     }
 
 
-    public void openDatePicker() {
-        initDatePicker();
+    public void openDatePicker(Button datePicker) {
+        initDatePicker(datePicker);
         datePickerDialog.show();
     }
 }
