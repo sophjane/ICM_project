@@ -8,8 +8,7 @@ import android.app.DatePickerDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Point;
-import android.graphics.Rect;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
@@ -18,31 +17,25 @@ import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TimeZone;
 
-/*import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.mlkit.vision.barcode.BarcodeScanner;
-import com.google.mlkit.vision.barcode.BarcodeScannerOptions;
-import com.google.mlkit.vision.barcode.BarcodeScanning;
-import com.google.mlkit.vision.barcode.common.Barcode;
-import com.google.mlkit.vision.common.InputImage;*/
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 public class AddMedicationActivity extends AppCompatActivity {
 
     ImageView selectedImage;
-    Button addPhotoBtn;
+    Button addPhotoBtn, startDateBtn, endDateBtn, gotoScanner, submit;
     EditText nameInput;
 
     DatePickerDialog datePickerDialog;
-    Button startDateBtn, endDateBtn;
 
     Calendar calendar;
     int currentYear;
@@ -51,16 +44,27 @@ public class AddMedicationActivity extends AppCompatActivity {
     Switch notifications;
     boolean notificationsOn;
 
-    Button gotoScanner;
+    Spinner frequencyDropdown;
+
+    Bitmap medicationPhoto;
 
 
-    static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int TEXT_REQUEST = 1;
+    private static final String STATE_PHOTO = "photo";
+    private static final String STATE_BARCODE = "barcode";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_medication);
+
+        /*if (savedInstanceState!=null){
+            byte[] image = savedInstanceState.getByteArray(STATE_PHOTO);
+            Toast.makeText(AddMedicationActivity.this, "An attemp was made", Toast.LENGTH_LONG).show();
+            medicationPhoto = convertCompressedByteArrayToBitmap(image);
+            selectedImage.setImageBitmap(medicationPhoto);
+        }*/
 
         calendar = Calendar.getInstance(TimeZone.getDefault());
 
@@ -75,6 +79,8 @@ public class AddMedicationActivity extends AppCompatActivity {
         endDateBtn = findViewById(R.id.endDate);
         notifications = findViewById(R.id.notificationSwitch);
         gotoScanner = findViewById(R.id.scanner);
+        frequencyDropdown = findViewById(R.id.spinner_frequency);
+        submit =findViewById(R.id.submit);
 
         notifications.setTextOn("On");
         notifications.setTextOff("Off");
@@ -99,7 +105,6 @@ public class AddMedicationActivity extends AppCompatActivity {
 
         nameInput.setVisibility(View.VISIBLE);
         endDateBtn.setVisibility(View.VISIBLE);
-        //endDateBtn.setText("Set End Date");
         endDateBtn.setTextSize(15);
         endDateBtn.setOnClickListener(new View.OnClickListener() {
                                             @Override
@@ -130,6 +135,16 @@ public class AddMedicationActivity extends AppCompatActivity {
             }
         });
 
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.frequency, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+        frequencyDropdown.setAdapter(adapter);
+
+        submit.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                handleSubmit();
+            }
+        });
+
     }
 
     private void handleGoToScanner() {
@@ -142,10 +157,11 @@ public class AddMedicationActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            addPhotoBtn.setVisibility(View.INVISIBLE);
+            //addPhotoBtn.setVisibility(View.INVISIBLE);
             selectedImage.setVisibility(View.VISIBLE);
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
+            medicationPhoto = imageBitmap;
             selectedImage.setImageBitmap(imageBitmap);
         }
         if (resultCode==RESULT_OK && data!=null) {
@@ -190,5 +206,54 @@ public class AddMedicationActivity extends AppCompatActivity {
     private void retrieveBarcode(Intent data){
         String barcode = data.getStringExtra("barcode");
         gotoScanner.setText(barcode);
+    }
+
+    private void handleSubmit(){
+        String name = nameInput.getText().toString();
+        String startDate = startDateBtn.getText().toString();
+        String endDate = endDateBtn.getText().toString();
+        String frequency = frequencyDropdown.getSelectedItem().toString();
+        String barcode = gotoScanner.getText().toString();
+        if (medicationPhoto!=null || (name!=null && name!="") || !startDate.contains("/") || frequency!=null || !barcode.matches(".*\\d.*")){
+            //Toast.makeText(AddMedicationActivity.this, medicationPhoto.toString(), Toast.LENGTH_LONG).show();
+            Toast.makeText(AddMedicationActivity.this, "Please fill in the fields, end date is not a required field", Toast.LENGTH_LONG).show();
+            return;
+        }
+        Map<String, Object> userInputs = new HashMap<>();
+        userInputs.put("photo", medicationPhoto);
+        userInputs.put("name", name);
+        userInputs.put("startDate", startDate);
+        if (!startDate.contains("/")){
+            userInputs.put("endDate", endDate);
+        }
+        userInputs.put("frequency", Integer.parseInt(frequency));
+        userInputs.put("barcode", barcode);
+        userInputs.put("notification", notificationsOn);
+
+        System.out.println(userInputs);
+        Toast.makeText(AddMedicationActivity.this, userInputs.toString(), Toast.LENGTH_LONG).show();
+
+    }
+
+    /*@Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        if (medicationPhoto!=null) {
+            byte[] image = convertBitmapToByteArray(medicationPhoto);
+            savedInstanceState.putByteArray(STATE_PHOTO, image);
+            Toast.makeText(AddMedicationActivity.this, medicationPhoto.toString(), Toast.LENGTH_LONG).show();
+
+        }
+        savedInstanceState.putString(STATE_BARCODE, gotoScanner.getText().toString());
+        // Always call the superclass so it can save the view hierarchy state
+        super.onSaveInstanceState(savedInstanceState);
+    }*/
+
+    private byte[] convertBitmapToByteArray(Bitmap bitmap){
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        return stream.toByteArray();
+    }
+    private Bitmap convertCompressedByteArrayToBitmap(byte[] src){
+        return BitmapFactory.decodeByteArray(src, 0, src.length);
     }
 }

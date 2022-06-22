@@ -12,7 +12,7 @@ tools:context=".AddMedicationActivity">
 
     <ImageView
         android:id="@+id/displayImageView"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="300dp"
         android:layout_marginHorizontal="30dp"
         android:layout_marginTop="50dp"
@@ -27,19 +27,23 @@ tools:context=".AddMedicationActivity">
         android:layout_gravity="center"
         android:layout_marginHorizontal="90dp"
         android:text="Add Photo"
-        android:visibility="visible"
         />
 
     <EditText
         android:id="@+id/nameInput"
+        android:layout_margin="20dp"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="10dp"
         android:layout_gravity="center"
-        android:hint="@string/medication_name"
-        android:visibility="invisible" />
+        android:hint="@string/medication_name"/>
 
-
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_margin="20dp"
+    android:layout_gravity="center">
     <Button
         android:id="@+id/startDate"
         android:layout_width="wrap_content"
@@ -47,8 +51,7 @@ tools:context=".AddMedicationActivity">
         android:textSize="30sp"
         android:layout_marginLeft="10dp"
         android:layout_gravity="center"
-        android:text="@string/start_date"
-        android:visibility="invisible"/>
+        android:text="@string/start_date"/>
 
     <Button
         android:id="@+id/endDate"
@@ -58,23 +61,61 @@ tools:context=".AddMedicationActivity">
         android:layout_marginLeft="10dp"
         android:layout_gravity="center"
         android:text="@string/end_date"/>
+</LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Frequency to take medication"
+            android:textColor="@color/black"
+            android:textSize="15dp"
+            android:layout_gravity="center"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_gravity="center">
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinner_frequency"
+            android:spinnerMode="dropdown"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:text="times per day"/>
+        </LinearLayout>
+
 
     <Button
+        android:layout_margin="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/scanner"
-        android:textSize="30sp"
         android:layout_marginLeft="10dp"
         android:layout_gravity="center"
-        android:text="SCAN"
+        android:text="scan medication barcode"
         />
 
     <Switch
+        android:layout_margin="10dp"
         android:id="@+id/notificationSwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="I want to be notified to take my medicine? "
+        />
+
+    <Button
+        android:id="@+id/submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/rounded_corners"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="30dp"
+        android:text="submit"
         />
     </LinearLayout>
 
