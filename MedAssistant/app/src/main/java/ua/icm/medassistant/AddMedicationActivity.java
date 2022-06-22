@@ -25,6 +25,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -53,6 +55,8 @@ public class AddMedicationActivity extends AppCompatActivity {
     private static final int TEXT_REQUEST = 1;
     private static final String STATE_PHOTO = "photo";
     private static final String STATE_BARCODE = "barcode";
+    private static int TIME_OUT =  10000;
+    Timer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,6 +154,17 @@ public class AddMedicationActivity extends AppCompatActivity {
     private void handleGoToScanner() {
         Intent intent = new Intent(this, CodeScannerActivity.class);
         startActivityForResult(intent, TEXT_REQUEST);
+
+      /*  timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(AddMedicationActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        }, TIME_OUT);*/
+
     }
 
     @Override
