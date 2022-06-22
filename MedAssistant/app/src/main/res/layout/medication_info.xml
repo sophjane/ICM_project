@@ -12,7 +12,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/nameMedication"
-            android:text="Name"
+            android:text="Brufen"
             android:textSize="25dp"
             android:layout_margin="10dp"
             android:layout_gravity="center"
@@ -35,7 +35,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/startDate"
-            android:text="Name"
+            android:layout_marginRight="15dp"
+            android:text="Start at 22/06/2022"
             android:textColor="@color/black"
             android:layout_gravity="center"
             />
@@ -44,9 +45,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/endDate"
             android:textColor="@color/black"
-            android:text="Name"
+            android:text="End at 04/07/2022"
             android:layout_gravity="center"
-            android:visibility="gone"
             />
         </LinearLayout>
         <TextView
@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/frequency"
             android:textColor="@color/black"
-            android:text="Name"
+            android:text="Frequência: 1 vezes por dia"
             android:layout_gravity="center"/>
         <Button
             android:layout_margin="10dp"
@@ -72,7 +72,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/notifications"
-            android:text="Name"
+            android:text="Notifications are On"
             android:textColor="@color/black"
             android:layout_gravity="center"/>
 

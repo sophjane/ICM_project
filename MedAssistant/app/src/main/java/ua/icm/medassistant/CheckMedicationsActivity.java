@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -28,7 +29,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import ua.icm.medassistant.datamodel.City;
 import ua.icm.medassistant.datamodel.CityGroup;
-import ua.icm.medassistant.entity.Medication;
+import ua.icm.medassistant.datamodel.Medication;
 import ua.icm.medassistant.network.IpmaApiEndpoints;
 import ua.icm.medassistant.network.RetrofitInstance;
 
@@ -52,10 +53,12 @@ public class CheckMedicationsActivity extends AppCompatActivity {
         toolbar.setTitle(getTitle());
         toolbar.setTitleTextColor(Color.WHITE);
 
+        generateDataList();
+
 
 
         //Create handle for the RetrofitInstance interface
-        IpmaApiEndpoints service = RetrofitInstance.getRetrofitInstance().create(IpmaApiEndpoints.class);
+        /*IpmaApiEndpoints service = RetrofitInstance.getRetrofitInstance().create(IpmaApiEndpoints.class);
 
         Call<CityGroup> call = service.getCityParent();
 
@@ -84,9 +87,11 @@ public class CheckMedicationsActivity extends AppCompatActivity {
     }
 
     /*Method to generate List of data using RecyclerView with custom adapter*/
-    private void generateDataList(CityGroup cityGroup) {
+    private void generateDataList() {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.medication_list);
-        recyclerView.setAdapter(new CityListViewAdapter(cityGroup.getCities()));
+        List<Medication> meds = new ArrayList<>();
+        meds.add(new Medication("Brufen", 0));
+        recyclerView.setAdapter(new CityListViewAdapter(meds));
         // The city_weather_container only shows up when the screen's width is 600dp or larger
         if (findViewById(R.id.medication_info_container) != null) {
             mTwoPane = true;
@@ -95,9 +100,9 @@ public class CheckMedicationsActivity extends AppCompatActivity {
 
     class CityListViewAdapter extends RecyclerView.Adapter<CityListViewAdapter.ViewHolder> {
 
-        private final List<City> mValues;
+        private final List<Medication> mValues;
 
-        CityListViewAdapter(List<City> items) {
+        CityListViewAdapter(List<Medication> items) {
             mValues = items;
         }
 
@@ -110,12 +115,12 @@ public class CheckMedicationsActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
             holder.mItem = mValues.get(position);
-            holder.mContentView.setText(mValues.get(position).getLocal());
+            holder.mContentView.setText(mValues.get(position).getName());
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mTwoPane) {
-                        int selectedCity = holder.mItem.getGlobalIdLocal();
+                        int selectedCity = holder.mItem.getMed_id();
                         MedicationInformationFragment fragment = MedicationInformationFragment.newInstance(selectedCity);
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.medication_info_container, fragment)
@@ -124,7 +129,7 @@ public class CheckMedicationsActivity extends AppCompatActivity {
                     } else {
                         Context context = v.getContext();
                         Intent intent = new Intent(context, MedicationInformationActivity.class);
-                        intent.putExtra("cityGlobalLocal", holder.mItem.getGlobalIdLocal());
+                        intent.putExtra("cityGlobalLocal", holder.mItem.getMed_id());
                         context.startActivity(intent);
                     }
                 }
@@ -139,7 +144,7 @@ public class CheckMedicationsActivity extends AppCompatActivity {
         class ViewHolder extends RecyclerView.ViewHolder {
             final View mView;
             final TextView mContentView;
-            City mItem;
+            Medication mItem;
 
             ViewHolder(View view) {
                 super(view);

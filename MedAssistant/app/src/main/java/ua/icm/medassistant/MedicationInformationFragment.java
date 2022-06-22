@@ -29,7 +29,7 @@ public class MedicationInformationFragment extends Fragment {
     private static final String LOG_TAG = MedicationInformationFragment.class.getSimpleName();
     private static final int TEXT_REQUEST = 1;
     //4007817328859
-    private final String code_test = "4007817328859";
+    private final String code_test = "5550587";
 
     Button scanner;
     /*Toast.makeText(CheckMedicationsActivity.this, "You checked the right medication", Toast.LENGTH_SHORT).show();

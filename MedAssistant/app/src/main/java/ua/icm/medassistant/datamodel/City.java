@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 import java.util.List;
 
-public class City {
+public class Medication {
 
     @Expose
     @SerializedName("local")
