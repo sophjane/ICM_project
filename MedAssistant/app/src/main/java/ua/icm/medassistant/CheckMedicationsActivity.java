@@ -14,7 +14,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -23,6 +27,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import ua.icm.medassistant.datamodel.City;
 import ua.icm.medassistant.datamodel.CityGroup;
+import ua.icm.medassistant.entity.Medication;
 import ua.icm.medassistant.network.IpmaApiEndpoints;
 import ua.icm.medassistant.network.RetrofitInstance;
 
