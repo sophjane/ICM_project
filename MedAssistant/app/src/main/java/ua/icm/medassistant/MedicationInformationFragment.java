@@ -1,5 +1,7 @@
 package ua.icm.medassistant;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -25,6 +27,13 @@ public class MedicationInformationFragment extends Fragment {
     int globalIdLocal;
     IpmaApiEndpoints service = RetrofitInstance.getRetrofitInstance().create(IpmaApiEndpoints.class);
     private static final String LOG_TAG = MedicationInformationFragment.class.getSimpleName();
+    private static final int TEXT_REQUEST = 1;
+    //4007817328859
+    private final String code_test = "4007817328859";
+
+    Button scanner;
+    /*Toast.makeText(CheckMedicationsActivity.this, "You checked the right medication", Toast.LENGTH_SHORT).show();
+    Toast.makeText(CheckMedicationsActivity.this, "You checked the wrong medication, please try again!", Toast.LENGTH_SHORT).show();*/
 
     public MedicationInformationFragment() {}
 
@@ -42,14 +51,24 @@ public class MedicationInformationFragment extends Fragment {
         if (getArguments().containsKey("cityGlobalLocal")) {
             globalIdLocal = getArguments().getInt("cityGlobalLocal");
         }
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_medication_info, container, false);
-        Call<WeatherGroup> call = service.getWeatherParent(globalIdLocal);
+        //Call<WeatherGroup> call = service.getWeatherParent(globalIdLocal);
 
-        call.enqueue(new Callback<WeatherGroup>() {
+        scanner = rootView.findViewById(R.id.scanner);
+
+        scanner.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                handleGoToScanner();
+            }
+        });
+
+        /*call.enqueue(new Callback<WeatherGroup>() {
 
             @Override
             public void onResponse(Call<WeatherGroup> call, Response<WeatherGroup> response) {
@@ -60,16 +79,46 @@ public class MedicationInformationFragment extends Fragment {
             public void onFailure(Call<WeatherGroup> call, Throwable t) {
                 //Toast.makeText(CityWeatherFragment.this, "Something went wrong...Please try later!", Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
         return rootView;
     }
 
+    private void handleGoToScanner() {
+        Intent intent = new Intent(getActivity(), CodeScannerActivity.class);
+        intent.putExtra("dummy", code_test);
+        startActivityForResult(intent, TEXT_REQUEST);
+        /*scanner.setText("Checked");
+        scanner.setBackgroundColor(0xFFFF0000);
+        scanner.setClickable(false);*/
+
+
+      /*  timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Intent intent = new Intent(AddMedicationActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        }, TIME_OUT);*/
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        scanner.setText("Checked");
+        scanner.setBackgroundColor(0xFF93C572);
+        scanner.setClickable(false);
+
+    }
 
 
     private void generateWeatherInfo(View rootView, WeatherGroup weatherGroup) {
 
         // Case 1
-        Weather weather1 = weatherGroup.getForecasts().get(0);
+        /*Weather weather1 = weatherGroup.getForecasts().get(0);
         TextView date1 = rootView.findViewById(R.id.date1);
         date1.setText(weather1.getForecastDate());
 
@@ -152,6 +201,6 @@ public class MedicationInformationFragment extends Fragment {
 
         TextView predWindDirVal5 = rootView.findViewById(R.id.predWindDirVal5);
         predWindDirVal5.setText(weather5.getPredWindDir());
-    }
+    */}
 
 }

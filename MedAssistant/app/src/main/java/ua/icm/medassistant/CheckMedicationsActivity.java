@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +39,9 @@ public class CheckMedicationsActivity extends AppCompatActivity {
     private static int TIME_OUT =  50000;
     Timer timer;
 
+
+    private static final int TEXT_REQUEST = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +51,8 @@ public class CheckMedicationsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
         toolbar.setTitleTextColor(Color.WHITE);
+
+
 
         //Create handle for the RetrofitInstance interface
         IpmaApiEndpoints service = RetrofitInstance.getRetrofitInstance().create(IpmaApiEndpoints.class);

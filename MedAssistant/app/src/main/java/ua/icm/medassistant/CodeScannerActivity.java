@@ -25,10 +25,16 @@ public class CodeScannerActivity extends AppCompatActivity {
     private static int CAMERA_REQUEST_CODE = 101;
     private String code;
     private Button next;
+    private String correct_code;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_code_scanner);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras !=null){
+            correct_code=extras.getString("dummy");
+        }
 
         CodeScannerView scannerView = findViewById(R.id.scanner_view);
         next = findViewById(R.id.next);
@@ -63,7 +69,16 @@ public class CodeScannerActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         code = result.getText();
-                        Toast.makeText(CodeScannerActivity.this, result.getText(), Toast.LENGTH_SHORT).show();
+                        if (correct_code!=null){
+                            if (code.equals(correct_code)){
+                                Toast.makeText(CodeScannerActivity.this, "You checked the right medication, please click next", Toast.LENGTH_SHORT).show();
+                                return;
+                            } else {
+                                Toast.makeText(CodeScannerActivity.this, "You checked the wrong medication, please try again!", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(CodeScannerActivity.this, "Code: "+result.getText(), Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
             }
