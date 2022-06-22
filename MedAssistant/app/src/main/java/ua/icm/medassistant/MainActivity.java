@@ -1,8 +1,12 @@
 package ua.icm.medassistant;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -10,31 +14,33 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.Arrays;
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
     private static final int TEXT_REQUEST = 1;
+    private static int CAMERA_REQUEST_CODE = 101;
 
-    protected boolean handleLongClick() {
+    protected void handleClick() {
         Intent intent = new Intent(this, HomeActivity.class);
         startActivityForResult(intent, TEXT_REQUEST);
-        return true;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //getApplication().setTheme(Theme.Material);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         LinearLayout layout = (LinearLayout) findViewById(R.id.layout);
-        layout.setOnLongClickListener(new View.OnLongClickListener() {
+        layout.setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public boolean onLongClick(View v) {
-               return handleLongClick();
+            public void onClick(View v) {
+               handleClick();
             }
 
         });
@@ -130,5 +136,17 @@ public class MainActivity extends AppCompatActivity {
 
         TextView dayTextView = findViewById(R.id.day);
         dayTextView.setText(fullDay);
+
+        setupPermissions();
+    }
+    private void setupPermissions(){
+        int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+
+        if (permission!= PackageManager.PERMISSION_GRANTED){
+            makeRequest();
+        }
+    }
+    private void makeRequest(){
+        ActivityCompat.requestPermissions(this, (String[]) Arrays.asList(android.Manifest.permission.CAMERA).toArray(), CAMERA_REQUEST_CODE);
     }
 }

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "521521785877",
+    "project_id": "med-assistant-3bf56",
+    "storage_bucket": "med-assistant-3bf56.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:521521785877:android:54b7050a2baffa7873f21c",
+        "android_client_info": {
+          "package_name": "ua.icm.medassistant"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "521521785877-cmeqgn9udl0uc460ovmobbn7mujof6oo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWYayKFPYzoAJp8PipBdMb6dJhhWHf15s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "521521785877-cmeqgn9udl0uc460ovmobbn7mujof6oo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

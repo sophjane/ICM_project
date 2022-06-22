@@ -6,10 +6,30 @@
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1015" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.1015" />
         <entry key="app/src/main/res/drawable/rounded_corners.xml" value="0.1425" />
+        <entry key="app/src/main/res/layout-w600dp/activity_check_medications.xml" value="0.1" />
+        <entry key="app/src/main/res/layout-w600dp/city_list.xml" value="0.30158730158730157" />
+        <entry key="app/src/main/res/layout-w600dp/medication_list.xml" value="0.30158730158730157" />
+        <entry key="app/src/main/res/layout-w600dp/medications_list.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_add_medication.xml" value="0.2006340579710145" />
         <entry key="app/src/main/res/layout/activity_check_medications.xml" value="0.2006340579710145" />
+        <entry key="app/src/main/res/layout/activity_city_list.xml" value="0.35520833333333335" />
+        <entry key="app/src/main/res/layout/activity_city_weather.xml" value="0.35625" />
         <entry key="app/src/main/res/layout/activity_home.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/activity_medication_info.xml" value="0.17147922998986828" />
+        <entry key="app/src/main/res/layout/activity_medication_list.xml" value="0.2296875" />
+        <entry key="app/src/main/res/layout/city_list.xml" value="0.2296875" />
+        <entry key="app/src/main/res/layout/city_list_content.xml" value="0.35520833333333335" />
+        <entry key="app/src/main/res/layout/city_weather.xml" value="0.35625" />
+        <entry key="app/src/main/res/layout/fragment_city_weather.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_medication_info.xml" value="0.2296875" />
+        <entry key="app/src/main/res/layout/fragment_medication_information.xml" value="0.1175925925925926" />
+        <entry key="app/src/main/res/layout/layout.xml" value="0.2296875" />
+        <entry key="app/src/main/res/layout/medication_info.xml" value="0.146403242147923" />
+        <entry key="app/src/main/res/layout/medication_list.xml" value="0.2296875" />
+        <entry key="app/src/main/res/layout/medication_list_item.xml" value="0.2296875" />
+        <entry key="app/src/main/res/layout/medications_item.xml" value="0.13019250253292808" />
+        <entry key="app/src/main/res/layout/medications_list.xml" value="0.1175925925925926" />
       </map>
     </option>
   </component>
